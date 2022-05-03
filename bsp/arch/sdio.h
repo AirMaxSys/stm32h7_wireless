@@ -5,8 +5,6 @@
 extern "C" {
 #endif
 
-#include "stm32h750xx.h"
-
 void mcu_sdio_init(void);
 
 #ifdef  __cplusplus
