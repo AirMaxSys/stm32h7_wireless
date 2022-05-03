@@ -77,6 +77,16 @@ void mcu_gpio_init(void)
   GPIO_InitStruct.Pull = LL_GPIO_PULL_UP;
   LL_GPIO_Init(LED_B_GPIO_Port, &GPIO_InitStruct);
 
+
+  // WIFI control
+  //    WL_HOST_WAKE -> pe3  (input)
+  //    WL_REG_ON    -> pc13 (output) WIFI function enabel
+
+  // Bluetooth control
+  //    BT_WAKE      -> pi10
+  //    BT_RST_N     -> pi11 
+  //    BT_HOST_WAKE -> pc0
+
 }
 
 /* USER CODE BEGIN 2 */
