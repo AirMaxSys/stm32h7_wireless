@@ -44,14 +44,17 @@ C_SOURCES =  \
 src/main.c	\
 src/stm32h7xx_it.c	\
 src/system_stm32h7xx.c	\
-lib/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_gpio.c	\
-lib/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_usart.c	\
+lib/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_gpio.c \
+lib/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_sdmmc.c \
+lib/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_usart.c \
 lib/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_rcc.c	\
-lib/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_utils.c	\
+lib/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_utils.c \
 bsp/arch/gpio.c	\
-bsp/arch/usart.c	\
-bsp/driver/led.c	\
-bsp/dirver/dbg_output.c
+bsp/arch/sdio.c	\
+bsp/arch/usart.c \
+bsp/driver/led.c \
+bsp/dirver/dbg_output.c \
+bsp/driver/wireless.c
 
 # ASM sources
 ASM_SOURCES =  \
@@ -112,10 +115,9 @@ C_INCLUDES =  \
 -Isrc \
 -Ilib/STM32H7xx_HAL_Driver/Inc \
 -Ilib/CMSIS/Device/ST/STM32H7xx/Include \
--Ilib/CMSIS/Include	\
--Ibsp/arch	\
--Ibsp/driver
-
+-Ilib/CMSIS/Include \
+-Ibsp/arch \
+-Ibsp/driver 
 
 # compile gcc flags
 ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
