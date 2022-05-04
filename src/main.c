@@ -20,9 +20,11 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "usart.h"
+#include "sdio.h"
 #include "gpio.h"
 #include "led.h"
 #include "dbg_output.h"
+#include "wireless.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -96,6 +98,11 @@ int main(void)
   mcu_gpio_init();
   mcu_debug_uart_init();
   dbg_output_setup();
+
+  // test sdio
+  hw_wl_init_test();
+
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -106,10 +113,6 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
     led_blink(LED_COLOR_RED, 500);
-    int var;
-    printf("Input num:");
-    scanf("%d", &var);
-    printf("The input num is:%d\n", var);
   }
   /* USER CODE END 3 */
 }
