@@ -1,4 +1,3 @@
-#include "stm32h750xx.h"
 #include "stm32h7xx_ll_gpio.h"  // gpio
 #include "stm32h7xx_ll_bus.h"   // rcc
 #include "stm32h7xx_ll_sdmmc.h" // sdmmc
@@ -69,9 +68,7 @@ static void mcu_sdmmc2_bus_gpio_init(void)
     gpio_structure.Speed = LL_GPIO_SPEED_FREQ_VERY_HIGH;
     LL_GPIO_Init(GPIOB, &gpio_structure);
 
-    gpio_structure.Pin =
-            LL_GPIO_PIN_6   |\
-            LL_GPIO_PIN_7;
+    gpio_structure.Pin = LL_GPIO_PIN_6 | LL_GPIO_PIN_7;
     gpio_structure.Mode = LL_GPIO_MODE_ALTERNATE;
     gpio_structure.Pull = LL_GPIO_PULL_UP;
     gpio_structure.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
@@ -89,7 +86,7 @@ void mcu_sdio_init(SDMMC_TypeDef *sdmmc)
         mcu_sdmmc1_bus_gpio_init();
     } else if (sdmmc == SDMMC2) {
         LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_SDMMC2);
-        mcu_sdmmc1_bus_gpio_init();
+        mcu_sdmmc2_bus_gpio_init();
     } else {
         return;
     }
@@ -111,10 +108,37 @@ void mcu_sdio_init(SDMMC_TypeDef *sdmmc)
     // TODO dma configuration
 }
 
+uint8_t mcu_sdio_cmd_with_resp(SDMMC_TypeDef *sdmmc, uint8_t cmd, uint8_t arg, uint32_t *resp)
+{
+    uint8_t ret = 0;
+    SDMMC_CmdInitTypeDef cmd_reg_structure = {0};
+
+    cmd_reg_structure.CmdIndex = cmd;
+    cmd_reg_structure.Argument = arg;
+    cmd_reg_structure.CPSM = SDMMC_CPSM_ENABLE;
+    cmd_reg_structure.Response = SDMMC_RESPONSE_SHORT;
+    cmd_reg_structure.WaitForInterrupt = SDMMC_WAIT_NO;
+    SDMMC_SendCommand(sdmmc, &cmd_reg_structure);
+
+    // check last command response index
+    if (cmd != (uint8_t)sdmmc->RESPCMD) {
+        return -1;
+    }
+
+    // FIXME wait clock cycle
+    LL_mDelay(1);
+
+    // FIXME which response register?
+    *resp = *(volatile uint32_t *)&sdmmc->RESP1;
+
+    // TODO check error flag and timeout
+    return ret;
+}
+
 // FIXME LL library has defined those functions
 uint8_t mcu_sdio_cmd_no_resp(SDMMC_TypeDef *sdmmc, uint8_t cmd, uint32_t arg)
 {
-    uint32_t ret = 0;
+    uint8_t ret = 0;
     SDMMC_CmdInitTypeDef cmd_reg_structure = {0};
 
     cmd_reg_structure.CmdIndex = cmd;
